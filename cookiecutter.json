@@ -1,0 +1,8 @@
+{
+  "repo_name": "YOUR_PROJECT_REPOSITORY_NAME - Entire project name.",
+  "package_name": "YOUR_PACKAGE - A unique python package name for initial creation.",
+  "project_type": [
+    "python_lib: A pip-installable Python Library",
+    "docker_exe: An executable buildable with Docker"
+  ]
+}

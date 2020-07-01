@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "{{cookiecutter.repo_name}}"
+version = "0.0.0"
+description = "TODO: One-sentence description."
+authors = ["TODO Name <youremail@domain>"]
+license = "Apache-2.0"
+# Ensure that all project package directories are present here with `{include="X"}` syntax.
+packages = [
+    { include = "{{cookiecutter.package_name}}" },
+]
+#### TODO: look at https://python-poetry.org/docs/pyproject/ for documentation on what can go in this file.
+
+[tool.poetry.dependencies]
+python = "^3.8"
+# TODO: Write your dependencies here.
+#       Or interactively add with `poetry add <dependency name>`
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.782"
+black = "^19.10b0"
+flake8 = "^3.8.3"
+ipython = "^7.16.1"
+ipdb = "^0.13.3"
+pytest-cov = "^2.10.0"
+pre-commit = "^2.5.1"
+# TODO: Write more testing or development tool dependencies.
+#       Or interactively add with `poetry add --dev <dependency name>`
+
+[tool.poetry.scripts]
+command_name_in_env_TODO = '{{cookiecutter.package_name}}.exe.TODO_main_program:entrypoint'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
