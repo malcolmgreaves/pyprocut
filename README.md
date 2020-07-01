@@ -1,4 +1,6 @@
 # pyprocut
+[![Build Status](https://travis-ci.org/malcolmgreaves/pyprocut.svg?branch=main)](https://travis-ci.org/malcolmgreaves/pyprocut)
+
 Cookiecutter template for python projects. Includes support for:
 + Python libraries
 + Docker-buildable projects

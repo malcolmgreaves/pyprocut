@@ -29,7 +29,7 @@ TESTING_CC_DIR="testing_cookiecutter_template"
 
 echo "Making testing dir: ${TESTING_CC_DIR}"
 mkdir "${TESTING_CC_DIR}"
-pushd "${TESTING_CC_DIR}"
+cd "${TESTING_CC_DIR}"
 
 for PTYPE in $(seq 0 ${END});
 do
@@ -39,19 +39,15 @@ do
   echo "---------------------------------------------------------"
   echo ""
 
+  cookiecutter ../ \
+    --no-input \
+    repo_name="${EXAMPLE_REPO_NAME}" \
+    package_name="a_package_${PTYPE}" \
+    project_type="${PROJECT_TYPE}"
+
+  cd "${EXAMPLE_REPO_NAME}"
+
   if [[ "${PTYPE}" == "0" ]]; then
-    echo "Creating project locally"
-    echo "------------------------"
-
-    cookiecutter ../ \
-      --no-input \
-      repo_name="${EXAMPLE_REPO_NAME}" \
-      package_name="a_package_${PTYPE}" \
-      project_type="${PROJECT_TYPE}"
-
-    pushd "${EXAMPLE_REPO_NAME}"
-    echo "-----------------------------------------"
-
     echo "Installing template project code & dependencies"
     echo "--"
     poetry install
@@ -61,25 +57,27 @@ do
     echo "--"
     poetry run pytest -v --cov-branch
     echo "-----------------------------------------"
-    popd
   fi
 
   if [[ "${PTYPE}" == "1" ]];
   then
     echo "Building docker image for executable project"
     echo "--"
+
     NAME="docker_exe"
-    docker build . -t "${NAME}"
+    docker build -t "${NAME}" .
     echo "-----------------------------------------"
 
     echo "Testing default TODO command: --help flag must work."
     echo "--"
-    docker run "${NAME}" TODO_main_program -h
+    docker run "${NAME}"
     echo "-----------------------------------------"
   fi
-  popd
+
+  cd ..
+  rm -rf "${EXAMPLE_REPO_NAME}"
 done
 
-popd
+cd ..
 rm -rf "${TESTING_CC_DIR}"
 echo "Cleaned-up testing dir: ${TESTING_CC_DIR}"
