@@ -27,6 +27,7 @@ When prompted for the `project_types` variable, there are **three** distinct cho
 one of which is selectable via supplying the associated number [1-3]:
 1. `python_lib`: A pip-installable python library.
 2. `docker_exe`: A Docker buildable image & associated Python executable program.
+3. "ml": A machine learning project, with HTTP server in Docker.
 
 
 
