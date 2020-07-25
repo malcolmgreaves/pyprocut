@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict, Iterable, Sequence, Union
+from typing import Mapping, Iterable, Sequence, Union
 
 
 def reorganize_files_for_project_type(
@@ -13,6 +13,10 @@ def reorganize_files_for_project_type(
     elif project_type_input.startswith("docker_exe"):
         print("Project setup for Docker buildable executable")
         handle_docker_exe_project(verbose=verbose)
+
+    elif project_type_input.startswith("ml"):
+        print("Project setup for machine learning project")
+        handle_ml_project(verbose=verbose)
 
     else:
         raise ValueError(
@@ -30,11 +34,10 @@ def reorganize_files_for_project_type(
         "   5. Push changes to the `main` branch.\n"
         "   6. Find all 'TODO's and fix or otherwise update appropriately!\n"
         "-----------------------------------------------------------------\n"
-        "NOTE: Before executing the steps below, change <YOUR_GH_USERNAME> to your exact GitHub username.\n"
         "```\n"
         "cd {{cookiecutter.repo_name}}\n"
         "git init\n"
-        "git remote add origin git@github.com:<YOUR_GH_USERNAME>/{{cookiecutter.repo_name}}.git\n"
+        "git remote add origin git@github.com:{{cookiecutter.user}}/{{cookiecutter.repo_name}}.git\n"
         "git add . && git commit -a -m 'Initial commit from template'\n"
         "git branch -m main && git push -u origin main\n"
         "find . -type f | grep TODO && find . -type f | xargs grep TODO\n"
@@ -50,7 +53,6 @@ def handle_python_lib_project(verbose: bool = False) -> None:
             [
                 # docker_exe specific files
                 "Dockerfile.docker_exe",
-                ("src", "{{cookiecutter.package_name}}", "exe"),
             ],
         ),
         verbose=verbose,
@@ -58,6 +60,24 @@ def handle_python_lib_project(verbose: bool = False) -> None:
 
 
 def handle_docker_exe_project(verbose: bool = False) -> None:
+    rename(
+        {
+            path("Dockerfile.docker_exe"): path("Dockerfile"),
+        },
+        verbose=verbose,
+    )
+
+def handle_ml_project(verbose: bool = False) -> None:
+    remove(
+        map(
+            path,
+            [
+                # python_lib / docker_exe specific files
+                ("src", "{{cookiecutter.package_name}}", "exe", "TODO_main_program.py"),
+            ],
+        ),
+        verbose=verbose,
+    )
     rename(
         {
             path("Dockerfile.docker_exe"): path("Dockerfile"),
@@ -84,7 +104,7 @@ def path(path_parts: Union[str, Sequence[str]]) -> Path:
         )
 
 
-def rename(orig2new: Dict[Path, Path], verbose: bool = False) -> None:
+def rename(orig2new: Mapping[Path, Path], verbose: bool = False) -> None:
     """Renames a set of files: keys are existing names and their value is the new name.
 
     :raises IOError
@@ -129,7 +149,7 @@ def delete(p: Path) -> None:
 
 
 def append(
-    source2dest: Dict[Path, Path], remove_after: bool, verbose: bool = False
+    source2dest: Mapping[Path, Path], remove_after: bool, verbose: bool = False
 ) -> None:
     """Append all of the contents from each key `source` to its corresponding value `destination`.
 
@@ -156,7 +176,7 @@ def append(
 
 def entrypoint():
     reorganize_files_for_project_type(
-        project_type_input="{{ cookiecutter.project_type }}", verbose=False
+        project_type_input="{{cookiecutter.project_type}}", verbose=False
     )
 
 

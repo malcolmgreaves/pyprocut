@@ -3,6 +3,8 @@
   "package_name": "YOUR_PACKAGE - A unique python package name for initial creation.",
   "project_type": [
     "python_lib: A pip-installable Python Library",
-    "docker_exe: An executable buildable with Docker"
-  ]
+    "docker_exe: An executable buildable with Docker",
+    "ml: A machine learning project, with HTTP server in Docker"
+  ],
+  "user": "GitHub username"
 }

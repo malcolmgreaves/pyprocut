@@ -13,8 +13,7 @@ Versions **MUST** conform to [Sematic Versioning 2.0](https://semver.org/)  rule
 ## Release Instructions
 To cut a new release, push a tag of the project's version on `main`:
 ```bash
-git checkout main 
-git tag $(poetry version | cut -d" " -f) && git push --tags
+git checkout main && git tag $(poetry version | cut -d" " -f) && git push --tags
 ```
 NOTE: Before tagging a commit, ensure that it is up-to-date on the repo. These actions trigger a build on CI that will publish a release of `{{cookiecutter.repo_name}}`.
 

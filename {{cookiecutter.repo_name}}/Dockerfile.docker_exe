@@ -28,4 +28,8 @@ COPY . /{{ cookiecutter.repo_name }}/
 RUN poetry config virtualenvs.create false && poetry install --no-dev --no-interaction 
 
 # TODO update command with custom executable program defined in entry_points of pyproject.toml -- use the command name under `tool.poetry.scripts`.
-CMD ["poetry", "run", "command_name_in_env_TODO"]
+{%- if cookiecutter.project_type.startswith("ml") %}
+ENTRYPOINT ["serve"]
+{% else %}
+ENTRYPOINT ["command_name_in_env_TODO"]
+{%- endif %}

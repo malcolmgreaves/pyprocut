@@ -6,13 +6,6 @@ echo "-----------------------------------"
 
 set -euo pipefail
 
-# alias sh='/bin/bash'
-# alias ash='/bin/bash'
-# alias pip='/usr/bin/pip3'
-# alias python='/usr/bin/python3'
-
-# TODO [MG] Still an issue? # BUG: Aliases don't work in alpine linux & py36???
-
 #
 # NOTE: These array values *must* equal the *exact* string values, in order,
 #       for the project_type template variable defined in cookiecutter.json.
@@ -20,6 +13,7 @@ set -euo pipefail
 declare -a PROJECT_TYPES=(
     "python_lib: A pip-installable python3 Library"
     "docker_exe: An executable buildable with Docker"
+    "ml: A machine learning project, with HTTP server in Docker"
 )
 END=$((${#PROJECT_TYPES[@]}-1))
 
@@ -43,7 +37,8 @@ do
     --no-input \
     repo_name="${EXAMPLE_REPO_NAME}" \
     package_name="a_package_${PTYPE}" \
-    project_type="${PROJECT_TYPE}"
+    project_type="${PROJECT_TYPE}" \
+    user="a_gh_username"
 
   cd "${EXAMPLE_REPO_NAME}"
 
@@ -63,14 +58,42 @@ do
   then
     echo "Building docker image for executable project"
     echo "--"
-
     NAME="docker_exe"
     docker build -t "${NAME}" .
     echo "-----------------------------------------"
 
     echo "Testing default TODO command: --help flag must work."
     echo "--"
-    docker run "${NAME}"
+    docker run "${NAME}" --help
+    echo "-----------------------------------------"
+  fi
+
+  if [[ "${PTYPE}" == "2" ]];
+  then
+    echo "Installing ML project dependencies"
+    echo "--"
+    poetry install
+    echo "-----------------------------------------"
+
+    echo "Testing that ML project scripts exist"
+    echo "--"
+    for cmd in $(echo download format-data make-train train evaluate predict serve); do
+      echo "Testing help flag for ${cmd}"
+      echo '-'
+      poetry run "${cmd}" --help
+      echo "------"
+    done
+    echo "-----------------------------------------"
+
+    echo "Testing that docker build works for ML project"
+    echo "--"
+    NAME="docker_exe"
+    docker build -t "${NAME}" .
+    echo "-----------------------------------------"
+
+    echo "Testing docker image for ML project: --help flag must work."
+    echo "--"
+    docker run "${NAME}" --help
     echo "-----------------------------------------"
   fi
 

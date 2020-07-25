@@ -1,4 +1,5 @@
 # {{cookiecutter.repo_name}}
+[![PyPI version](https://badge.fury.io/py/{{cookiecutter.repo_name}}.svg)](https://badge.fury.io/py/{{cookiecutter.repo_name}}.svg) [![Build Status](https://travis-ci.org/{{cookiecutter.user}}/{{cookiecutter.repo_name}}.svg?branch=main)](https://travis-ci.org/{{cookiecutter.user}}/{{cookiecutter.repo_name}}) [![Coverage Status](https://coveralls.io/repos/github/{{cookiecutter.user}}/{{cookiecutter.repo_name}}/badge.svg?branch=main)](https://coveralls.io/github/{{cookiecutter.user}}/{{cookiecutter.repo_name}}?branch=main)
 
 TODO: WRITE A VERY SHORT **SUMMARY** OF YOUR PROJECT'S **PURPOSE**.
 
@@ -9,27 +10,46 @@ This section provides helpful information for individuals using this project's c
 
 
 ### Python Package Installation
-To use this Python library in your own project, use `pip` to install:
+To use this Python library in your own project, you can use `pip` to install:
 ```bash
-pip install {{cookiecutter.repo_name}}==$VERSION
+pip install {{cookiecutter.repo_name}}==${VERSION}
 ```
 
-If you use poetry, you may add `{{cookiecutter.repo_name}}==$VERSION` to your `pyproject.toml` or do `poetry add {{cookiecutter.repo_name}}==$VERSION`.
+If you use poetry, you may add `{{cookiecutter.repo_name}}==${VERSION}` to your 
+`pyproject.toml` or do `poetry add {{cookiecutter.repo_name}}==${VERSION}`.
 
 
-{%- if cookiecutter.project_type.startswith("docker_exe") %}
+{%- if cookiecutter.project_type.startswith("docker_exe") or cookiecutter.project_type.startswith("ml") %}
 
 
 ### Docker
 To use this Docker service, EXECUTE:
 ```bash
-docker pull {{cookiecutter.repo_name}}:$VERSION
+docker pull {{cookiecutter.repo_name}}:${VERSION}
 ```
 {%- endif %}
 
-**NOTE**: Here, `$VERSION` is a stand-in for the most-recently published [Sematic Versioning 2.0](https://semver.org/)-compliant release.
+**NOTE**: Here, `${VERSION}` is a stand-in for the most-recently published [Sematic Versioning 2.0](https://semver.org/) compliant release.
 
 
+{%- if cookiecutter.project_type.startswith("ml") %}
+### Executable Programs
+This project includes several programs that aid in a Machine Learning (ML) project's lifecycle.
+Included in the project's environment are the following commands:
+- `download` - Downloads data necessary for training & evaluating the model.
+- `format-data` - Processes and formats the downloaded data into a form that it suitable for making labeled data.
+- `make-train` - Uses the formatted data to generate training and test data for the model.
+- `train` - Uses the training data (and test, for held-out evaluation) and learns model parameters.
+- `evaluate` - Uses the trained model and a set of testing data to evaluate model performance.
+- `predict` - Use a trained model for batch prediction.
+- `serve` - Launch an HTTP REST server for performing predictions using a trained model.
+
+Note that, for this project, the associated docker image's ENTRYPOINT starts the webserver via the `serve` command. 
+
+TODO: Customize documentation about these programs (deleting them or replacing them as desired).
+
+
+{%- endif %}
 
 
 ## For Developers
@@ -37,8 +57,11 @@ Individuals maintaining, developing, and otherwise contributing to the repositor
 this section for processes and conventions related to development.
 
 
-## Development Setup
-This project uses [`poetry`](https://python-poetry.org/) for environment and dependency management. We recommend using [`brew`](https://brew.sh/) and [`pipx`](https://github.com/pipxproject/pipx) to install `poetry` system-wide in an isolated environment (`brew install pipx && pipx install poetry` works on OSX and Linux).
+### Development Setup
+This project uses [`poetry`](https://python-poetry.org/) for environment and dependency management.
+We recommend using [`brew`](https://brew.sh/) and [`pipx`](https://github.com/pipxproject/pipx) 
+to install `poetry` system-wide in an isolated environment (`brew install pipx && pipx install poetry` 
+works on OSX and Linux).
 
 To install the project's dependencies, perform:
 ```bash
@@ -52,7 +75,7 @@ poetry run python
 ```
 Alternatively, you may activate the environment by performing `poetry shell` and directly invoke Python programs.
 
-NOTE: If this is your initial set-up, do `poetry run pre-commit install` once in this project's root.
+**NOTE**: If this is your initial set-up, do `poetry run pre-commit install` once in this project's root.
 
 
 #### Testing
@@ -62,22 +85,28 @@ poetry run pytest -v
 ```
 
 #### Dev Tools
-This project uses `black` for code formatting, `flake8` for linting, and
-`mypy` for type checking. Use the following commands to ensure code quality:
+This project the following tools to ease development:
 
+- `black` for code formatting
 ```bash
-# formats all code in-place
 poetry run black .
 ```
-
-
-### Type Checking
-This project makes use of Python 3 type annotations in order to make the code
-both more readable and safer. We use `mypy` to type check and statically 
-analyze source code for bugs. To type check all python files in the project, 
-execute,  from the project root:
+ 
+- `flake8` for linting
 ```bash
-poetry run mypy --ignore-missing-imports --follow-imports=silent --show-column-numbers {{cookiecutter.package_name}}
+poetry run flake8 \
+    --max-line-length=100 \
+    --ignore=E501,W293,E303,W291,W503,E203,E731,E231,E721,E722,E741 \
+    .
+```
+
+- `mypy` for type checking
+```bash
+poetry run mypy \
+    --ignore-missing-imports \
+    --follow-imports=silent \
+    --show-column-numbers \
+    {{cookiecutter.package_name}}
 ```
 
 

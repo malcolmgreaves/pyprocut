@@ -14,7 +14,9 @@ script:
 - poetry run mypy --ignore-missing-imports --follow-imports=silent --show-column-numbers --warn-unreachable . 
 - poetry run pytest -v --cov {{cookiecutter.package_name}}
 - poetry run coverage html
+{%- if cookiecutter.project_type.startswith("ml") or cookiecutter.project_type.startswith("docker_exe") %}
 - docker build -t {{cookiecutter.repo_name}}:${TRAVIS_COMMIT}
+{%- endif %}
 # TODO: If you want to use a code-coverage service, e.g. coveralls: https://coveralls.io/
 #       Uncomment the 'after_success' section below.
 #       NOTE: Make sure you `poetry add --dev coveralls` !!
@@ -29,11 +31,12 @@ script:
 #         1. You have a PyPI login
 #         2. You add your API token as a secret in Travis CI.
 #         3. Follow https://python-poetry.org/docs/repositories/#configuring-credentials
-#{%- if cookiecutter.project_type.startswith("docker_exe") %}
+#{%- if cookiecutter.project_type.startswith("ml") or cookiecutter.project_type.startswith("docker_exe") %}
+#
 #      And, if so, publish your docker image to Docker Hub:
 #      >> docker push {{cookiecutter.repo_name}}:${TRAVIS_COMMIT}
 #      If you want to do this, make sure that:
 #         1. You have a Docker Hub login
 #         2. You have saved your username and password as secret env vars in Travis CI.
 #         3. You do `docker login` before pushing.
-{%- endif %}
+#{%- endif %}

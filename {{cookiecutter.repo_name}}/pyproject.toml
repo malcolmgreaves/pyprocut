@@ -12,8 +12,20 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
+pywise = "*"
+{%- if cookiecutter.project_type.startswith("ml") %}
+tqdm = "*"
+pandas = "*"
+torch = "*"
+pytorch-lightning = "*"
+transformers = "*"
+spacy = "*"
+torchvision = "*"
+albumentations = "*"
+{%- endif %}
 # TODO: Write your dependencies here.
 #       Or interactively add with `poetry add <dependency name>`
+
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
@@ -27,7 +39,17 @@ pre-commit = "^2.5.1"
 #       Or interactively add with `poetry add --dev <dependency name>`
 
 [tool.poetry.scripts]
+{%- if cookiecutter.project_type.startswith("ml") %}
+download = '{{cookiecutter.package_name}}.exe.download_data:entrypoint'
+format-data = '{{cookiecutter.package_name}}.exe.format_data:entrypoint'
+make-train ='{{cookiecutter.package_name}}.exe.make_train:entrypoint'
+train = '{{cookiecutter.package_name}}.exe.train_model:entrypoint'
+evaluate = '{{cookiecutter.package_name}}.exe.evaluate_model:entrypoint'
+predict = '{{cookiecutter.package_name}}.exe.batch_predict:entrypoint'
+serve = '{{cookiecutter.package_name}}.exe.model_server:entrypoint'
+{% else %}
 command_name_in_env_TODO = '{{cookiecutter.package_name}}.exe.TODO_main_program:entrypoint'
+{%- endif %}
 
 [build-system]
 requires = ["poetry>=0.12"]

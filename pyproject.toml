@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyprocut"
-version = "0.0.0"
+version = "0.1.0"
 description = "Cookiecutter template for Python projects."
 authors = ["Malcolm Greaves <greaves.malcolm@gmail.com>"]
 license = "Apache-2.0"

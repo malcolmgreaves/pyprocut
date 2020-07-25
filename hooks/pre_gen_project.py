@@ -29,12 +29,12 @@ def assert_name_properites(
 
 def entrypoint():
     assert_name_properites(
-        name="{{ cookiecutter.repo_name }}",
+        name="{{cookiecutter.repo_name}}",
         message_prefix="repository name",
         ok_punctuation=["-"],
     )
     assert_name_properites(
-        name="{{ cookiecutter.package_name }}",
+        name="{{cookiecutter.package_name}}",
         message_prefix="package name",
         ok_punctuation=["_"],
     )
